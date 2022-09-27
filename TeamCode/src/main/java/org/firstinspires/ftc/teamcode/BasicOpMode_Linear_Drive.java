@@ -88,7 +88,8 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-
+        // We might need to check the name of the controller buttons
+        // That might be what made our robot fail
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double rx = gamepad1.right_stick_x;
