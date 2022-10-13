@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
+
 public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
     // Declare OpMode members.
@@ -91,7 +91,8 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         // We might need to check the name of the controller buttons
         // That might be what made our robot fail
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+           // double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
+            //might need to add a - to the right stick to change the direction of the strafing
             double rx = gamepad1.right_stick_x;
             
             // Choose to drive using either Tank Mode, or POV Mode
@@ -100,11 +101,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             // This ensures all the powers maintain the same ratio, but only when
             // at least one is out of the range [-1, 1]
               // lower the power of the motors (denominator * 2)?
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double frontLeftPower = (y + x + rx) / denominator;
-            double backLeftPower = (y - x + rx) / denominator;
-            double frontRightPower = (y - x - rx) / denominator;
-            double backRightPower = (y + x - rx) / denominator;
+            double denominator = Math.max(Math.abs(y)  + Math.abs(rx), 1);
+            double frontLeftPower = (y  + rx) / denominator;
+            double backLeftPower = (y  + rx) / denominator;
+            double frontRightPower = (y  - rx) / denominator;
+            double backRightPower = (y  - rx) / denominator;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
