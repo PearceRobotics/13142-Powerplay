@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -58,6 +59,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
 
+    //arm motors
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor intakeMotor = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -71,6 +77,13 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
 
+        //arm motors
+        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor" );
+        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor" );
+
+        //intake motor
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -78,6 +91,13 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        //arm motors
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+        //intake motor
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
        // Waitforthegametostart(driver presses PLAY)
         waitForStart();
@@ -90,6 +110,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
             double sl = -gamepad1.left_trigger;
+            double ro = -gamepad1.right_stick_x;
+            boolean au = gamepad1.y;
+            boolean ad = gamepad1.b;
+            boolean im = gamepad1.right_bumper;
+
 //
           //  Choose to drive using either Tank Mode, or POV Mode
            // Comment out the method that 's not used.  The default below is POV.
@@ -107,6 +132,9 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
          double backLeftPower = 0;
          double frontRightPower = 0;
          double backRightPower = 0;
+         double leftArmPower = 0;
+         double rightArmPower = 0;
+         double intakePower = 0;
 
             if(y > .1 || y < -.1 ){
                 frontLeftPower = y;
@@ -115,12 +143,32 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 backRightPower = y;
             }
 
-            if(sl < -.1){
-                frontLeftPower = sl;
-                backLeftPower = -sl;
-                frontRightPower = -sl;
-                backRightPower = sl;
+            if(sl < -.1 || sr > .1){
+                frontLeftPower -= sl + sr;
+                backLeftPower -= sl + sr;
+                frontRightPower += sl + sr;
+                backRightPower +=  sl + sr;
             }
+
+            if(ro < -.1 || ro > .1){
+                frontLeftPower += ro;
+                backLeftPower += ro;
+                frontRightPower -= ro;
+                backRightPower -= ro;
+            }
+
+            //arm code
+            if( au = true){
+                leftArmPower = .75;
+                rightArmPower = .75;
+            }
+
+            if(im = true){
+                intakePower = .60;
+            }
+
+           // frontLeftPower = frontLeftPower + sl;
+
 
             //Tank Mode uses one stick to control each wheel.
                    // - This requires no math, but it is hard to drive forward slowly and
@@ -141,3 +189,59 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         }
     }
 }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+//
