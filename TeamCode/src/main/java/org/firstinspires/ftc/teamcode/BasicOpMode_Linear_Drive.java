@@ -35,6 +35,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.checkerframework.checker.lock.qual.Holding;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -77,11 +79,12 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
 
-        //arm motors
+        //arm motors (name of motors will have to change when we get a hold of the robot and hook up
+        //the control station to the control hub)
         leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor" );
         rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor" );
 
-        //intake motor
+        //intake motor (name of motor subject to change)
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
@@ -142,7 +145,6 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 frontRightPower = y;
                 backRightPower = y;
             }
-
             if(sl < -.1 || sr > .1){
                 frontLeftPower -= sl + sr;
                 backLeftPower -= sl + sr;
@@ -158,17 +160,27 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             }
 
             //arm code
-            if( au = true){
+            if(au == true){
                 leftArmPower = .75;
                 rightArmPower = .75;
+                //send power to motor
+                leftMotor.setPower(leftArmPower);
+                rightMotor.setPower(rightArmPower);
+                //do we want the arm to hold in place or go down when it's not going up?
+                //
             }
 
-            if(im = true){
+            if(ad == true){
+                intakePower = .6;
+                intakeMotor.setPower(intakePower);
+            }
+
+            //intake code
+            if(im == true){
                 intakePower = .60;
             }
 
            // frontLeftPower = frontLeftPower + sl;
-
 
             //Tank Mode uses one stick to control each wheel.
                    // - This requires no math, but it is hard to drive forward slowly and
@@ -182,7 +194,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
            rightFrontDrive.setPower(frontRightPower);
            rightBackDrive.setPower(backRightPower);
 
-           // Show the elapsed game time and wheel power.
+            // send power to intake motor
+            intakeMotor.setPower(intakePower);
+
+
+            // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
             telemetry.update();
@@ -190,58 +206,4 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
     }
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
-
-//
