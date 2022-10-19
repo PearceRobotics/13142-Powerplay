@@ -181,6 +181,8 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             }
 
            // frontLeftPower = frontLeftPower + sl;
+            
+            //we can use a breakmode that is already implemented into the motors instead of using a PID loop
 
             //Tank Mode uses one stick to control each wheel.
                    // - This requires no math, but it is hard to drive forward slowly and
@@ -196,9 +198,6 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
             // send power to intake motor
             intakeMotor.setPower(intakePower);
-
-
-            //we can use a breakmode that is already implemented into the motors instead of using a PID loop
             
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
