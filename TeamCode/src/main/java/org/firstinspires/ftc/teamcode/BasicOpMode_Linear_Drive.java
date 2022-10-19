@@ -198,6 +198,8 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             intakeMotor.setPower(intakePower);
 
 
+            //we can use a breakmode that is already implemented into the motors instead of using a PID loop
+            
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
