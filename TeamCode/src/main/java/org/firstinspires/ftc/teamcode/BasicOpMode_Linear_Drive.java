@@ -64,14 +64,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
     private DcMotor rightMotor = null;
     private DcMotor intakeMotor = null;
 
-     void armBreakMode(){
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
 
-    void intakeBreakMode(){
-         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -128,7 +121,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         double intakePower = 0;
         while (opModeIsActive()) {
 //
-            double y = -gamepad1.left_stick_y; // Remember, this is reversed!
+            double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
             double sl = -gamepad1.left_trigger;
@@ -151,17 +144,13 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             double frontRightPower = (y - sl -sr) / denominator;
             double backRightPower = (y - sl - sr) / denominator;
             */
-            frontLeftPower = 0;
-            backLeftPower = 0;
-            frontRightPower = 0;
-            backRightPower = 0;
-            intakePower = 0;
 
-            if (y > .1 || y < -.1) {
-                frontLeftPower = y;
-                backLeftPower = y;
-                frontRightPower = y;
-                backRightPower = y;
+
+            if (r > .1 || r < -.1) {
+                frontLeftPower = r;
+                backLeftPower = r;
+                frontRightPower = r;
+                backRightPower = r;
             }
 
             if (sl < -.1 || sr > .1) {
@@ -186,7 +175,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 int setPosition = 10;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
-                armBreakMode();
+
             }
             if (aumj == true) {
                 leftMotor.setPower(.4);
@@ -195,14 +184,19 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 int setPosition = 5;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
-                armBreakMode();
+
             }
 
             if (imu == true) {
                 intakePower = .60;
 
             }
-
+            // Send calculated power to wheels
+            leftFrontDrive.setPower(frontLeftPower);
+            leftBackDrive.setPower(backLeftPower);
+            rightFrontDrive.setPower(frontRightPower);
+            rightBackDrive.setPower(backRightPower);
+            intakeMotor.setPower(intakePower);
 
         }
 
@@ -215,13 +209,6 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         //keep straight.
         // leftPower = -gamepad1.left_stick_y;
         //  rightPower = -gamepad1.right_stick_y;
-
-        // Send calculated power to wheels
-        leftFrontDrive.setPower(frontLeftPower);
-        leftBackDrive.setPower(backLeftPower);
-        rightFrontDrive.setPower(frontRightPower);
-        rightBackDrive.setPower(backRightPower);
-        intakeMotor.setPower(intakePower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
