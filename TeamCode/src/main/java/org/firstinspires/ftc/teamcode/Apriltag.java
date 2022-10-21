@@ -24,6 +24,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -51,6 +52,16 @@ public class Apriltag extends LinearOpMode
     double fy = 578.272;
     double cx = 402.145;
     double cy = 221.506;
+
+    private DcMotor leftFrontDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightBackDrive = null;
+
+    //arm motors
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor intakeMotor = null;
 
     // UNITS ARE METERS
     double tagsize = 0.166;
@@ -144,6 +155,15 @@ public class Apriltag extends LinearOpMode
             }
 
             sleep(20);
+
+            /*if(){
+                leftFrontDrive.setTargetPosition();
+                leftBackDrive.setTargetPosition();
+                rightFrontDrive.setTargetPosition();
+                rightBackDrive.setTargetPosition();
+
+            }
+            */
         }
     }
 }

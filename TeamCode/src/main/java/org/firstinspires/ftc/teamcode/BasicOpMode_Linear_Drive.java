@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -49,10 +47,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 
 
 @TeleOp(name = "Basic: Linear OpMode", group = "Robot code")
@@ -70,6 +64,14 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
     private DcMotor rightMotor = null;
     private DcMotor intakeMotor = null;
 
+     void armBreakMode(){
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    void intakeBreakMode(){
+         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -108,9 +110,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
 
         //intake motor
@@ -125,6 +125,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         double frontRightPower = 0;
         double backLeftPower = 0;
         double frontLeftPower = 0;
+        double intakePower = 0;
         while (opModeIsActive()) {
 //
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
@@ -133,7 +134,6 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             double sl = -gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
             boolean auhj = gamepad1.y;
-            boolean ad = gamepad1.b;
             boolean imu = gamepad1.right_bumper;
             boolean imd = gamepad1.left_bumper;
             boolean aumj = gamepad1.a;
@@ -155,7 +155,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             backLeftPower = 0;
             frontRightPower = 0;
             backRightPower = 0;
-            double intakePower = 0;
+            intakePower = 0;
 
             if (y > .1 || y < -.1) {
                 frontLeftPower = y;
@@ -180,18 +180,22 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
 
             if (auhj == true) {
-                leftMotor.setPower(.1);
-                rightMotor.setPower(.1);
+                leftMotor.setPower(.4);
+                rightMotor.setPower(.4);
+                //change the setPosition
                 int setPosition = 10;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
+                armBreakMode();
             }
             if (aumj == true) {
-                leftMotor.setPower(.1);
-                rightMotor.setPower(.1);
+                leftMotor.setPower(.4);
+                rightMotor.setPower(.4);
+                // change the setPosition
                 int setPosition = 5;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
+                armBreakMode();
             }
 
             if (imu == true) {
@@ -217,6 +221,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         leftBackDrive.setPower(backLeftPower);
         rightFrontDrive.setPower(frontRightPower);
         rightBackDrive.setPower(backRightPower);
+        intakeMotor.setPower(intakePower);
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
