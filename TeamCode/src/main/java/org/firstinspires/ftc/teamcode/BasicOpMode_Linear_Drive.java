@@ -29,9 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -48,6 +50,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+
+
 @TeleOp(name = "Basic: Linear OpMode", group = "Robot code")
 public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
@@ -57,6 +64,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
+
+    //arm motors
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor intakeMotor = null;
 
     @Override
     public void runOpMode() {
@@ -71,6 +83,13 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
 
+        //arm motors
+        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
+        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
+
+        //intake motor
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
@@ -79,23 +98,52 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-       // Waitforthegametostart(driver presses PLAY)
+
+        //arm motors
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setTargetPosition(0);
+        rightMotor.setTargetPosition(0);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+        //intake motor
+        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
+
+        // Waitforthegametostart(driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-       // run until the end of the match(driver presses STOP)
+        // run until the end of the match(driver presses STOP)
+        double backRightPower = 0;
+        double frontRightPower = 0;
+        double backLeftPower = 0;
+        double frontLeftPower = 0;
         while (opModeIsActive()) {
 //
             double y = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
             double sl = -gamepad1.left_trigger;
+            double ro = -gamepad1.right_stick_x;
+            boolean auhj = gamepad1.y;
+            boolean ad = gamepad1.b;
+            boolean imu = gamepad1.right_bumper;
+            boolean imd = gamepad1.left_bumper;
+            boolean aumj = gamepad1.a;
+
 //
-          //  Choose to drive using either Tank Mode, or POV Mode
-           // Comment out the method that 's not used.  The default below is POV.
-           // Denominator is the largest motor power (absolute value)or 1
-           // This ensures all the powers maintain the same ratio, but only when
-           // at least one is out of the[] range -1, 1]
+            //  Choose to drive using either Tank Mode, or POV Mode
+            // Comment out the method that 's not used.  The default below is POV.
+            // Denominator is the largest motor power (absolute value)or 1
+            // This ensures all the powers maintain the same ratio, but only when
+            // at least one is out of the[] range -1, 1]
             /*
             double denominator = Math.max(Math.abs(y)  + Math.abs(sl), 1);
             double frontLeftPower = (y  + sl + sr) / denominator;
@@ -103,99 +151,77 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             double frontRightPower = (y - sl -sr) / denominator;
             double backRightPower = (y - sl - sr) / denominator;
             */
-         double frontLeftPower = 0;
-         double backLeftPower = 0;
-         double frontRightPower = 0;
-         double backRightPower = 0;
+            frontLeftPower = 0;
+            backLeftPower = 0;
+            frontRightPower = 0;
+            backRightPower = 0;
+            double intakePower = 0;
 
-            if(y > .1 || y < -.1 ){
+            if (y > .1 || y < -.1) {
                 frontLeftPower = y;
                 backLeftPower = y;
                 frontRightPower = y;
                 backRightPower = y;
             }
 
-            if(sl < -.1 || sr > .1){
+            if (sl < -.1 || sr > .1) {
                 frontLeftPower -= sl + sr;
                 backLeftPower -= sl + sr;
                 frontRightPower += sl + sr;
-                backRightPower +=  sl + sr;
+                backRightPower += sl + sr;
             }
-           // frontLeftPower = frontLeftPower + sl;
+
+            if (ro < -.1 || ro > .1) {
+                frontLeftPower += ro;
+                backLeftPower += ro;
+                frontRightPower -= ro;
+                backRightPower -= ro;
+            }
 
 
-            //Tank Mode uses one stick to control each wheel.
-                   // - This requires no math, but it is hard to drive forward slowly and
-            //keep straight.
-           // leftPower = -gamepad1.left_stick_y;
-          //  rightPower = -gamepad1.right_stick_y;
+            if (auhj == true) {
+                leftMotor.setPower(.1);
+                rightMotor.setPower(.1);
+                int setPosition = 10;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+            }
+            if (aumj == true) {
+                leftMotor.setPower(.1);
+                rightMotor.setPower(.1);
+                int setPosition = 5;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+            }
 
-           // Send calculated power to wheels
-            leftFrontDrive.setPower(frontLeftPower);
-            leftBackDrive.setPower(backLeftPower);
-           rightFrontDrive.setPower(frontRightPower);
-           rightBackDrive.setPower(backRightPower);
+            if (imu == true) {
+                intakePower = .60;
 
-           // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
-            telemetry.update();
+            }
+
+
         }
+
+
+        // frontLeftPower = frontLeftPower + sl;
+
+
+        //Tank Mode uses one stick to control each wheel.
+        // - This requires no math, but it is hard to drive forward slowly and
+        //keep straight.
+        // leftPower = -gamepad1.left_stick_y;
+        //  rightPower = -gamepad1.right_stick_y;
+
+        // Send calculated power to wheels
+        leftFrontDrive.setPower(frontLeftPower);
+        leftBackDrive.setPower(backLeftPower);
+        rightFrontDrive.setPower(frontRightPower);
+        rightBackDrive.setPower(backRightPower);
+
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Motor level", "Run Time: " + leftMotor.getCurrentPosition());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
+        telemetry.update();
     }
-}
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-//
+    }
