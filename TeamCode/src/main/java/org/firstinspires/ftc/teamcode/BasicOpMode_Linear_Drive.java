@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -101,10 +102,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         rightMotor.setTargetPosition(0);
         leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-
-
-
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //intake motor
         intakeMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -114,18 +112,20 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         runtime.reset();
 
         // run until the end of the match(driver presses STOP)
-        double backRightPower = 0;
-        double frontRightPower = 0;
-        double backLeftPower = 0;
-        double frontLeftPower = 0;
-        double intakePower = 0;
+
         while (opModeIsActive()) {
 //
+            double backRightPower = 0;
+            double frontRightPower = 0;
+            double backLeftPower = 0;
+            double frontLeftPower = 0;
+            double intakePower = 0;
             double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
             double sl = -gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
+
             boolean auhj = gamepad1.y;
             boolean imu = gamepad1.right_bumper;
             boolean imd = gamepad1.left_bumper;
@@ -146,50 +146,60 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             */
 
 
-            if (r > .1 || r < -.1) {
+            if (r > .2 || r < -.2) {
                 frontLeftPower = r;
                 backLeftPower = r;
                 frontRightPower = r;
                 backRightPower = r;
             }
 
-            if (sl < -.1 || sr > .1) {
+            if (sl < -.2 || sr > .2) {
                 frontLeftPower -= sl + sr;
                 backLeftPower -= sl + sr;
                 frontRightPower += sl + sr;
                 backRightPower += sl + sr;
             }
 
-            if (ro < -.1 || ro > .1) {
-                frontLeftPower += ro;
+            if (ro < -.2 || ro > .2) {
+                frontLeftPower -= ro;
                 backLeftPower += ro;
-                frontRightPower -= ro;
+                frontRightPower += ro;
                 backRightPower -= ro;
             }
 
-
-            if (auhj == true) {
-                leftMotor.setPower(.4);
-                rightMotor.setPower(.4);
+            if (gamepad1.y) {
+                leftMotor.setPower(.6);
+                rightMotor.setPower(.6);
                 //change the setPosition
-                int setPosition = 10;
+                int setPosition = 375;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
-            if (aumj == true) {
+            if (gamepad1.b) {
+                leftMotor.setPower(.6);
+                rightMotor.setPower(.6);
+                // change the setPosition
+                int setPosition = 220;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+
+            }
+
+            if(gamepad1.a){
                 leftMotor.setPower(.4);
                 rightMotor.setPower(.4);
-                // change the setPosition
-                int setPosition = 5;
+                int setPosition = 0;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
-
             }
 
-            if (imu == true) {
-                intakePower = .60;
+            if (imu) {
+                intakePower = 1.0;
+            }
 
+            if(imd){
+                intakePower = -1.0;
             }
             // Send calculated power to wheels
             leftFrontDrive.setPower(frontLeftPower);
@@ -198,6 +208,16 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
             intakeMotor.setPower(intakePower);
 
+
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Motor level l", "Left Arm Position: " + leftMotor.getCurrentPosition());
+            telemetry.addData("motor level r", "Right Arm Position: " + rightMotor.getCurrentPosition());
+            telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
+            telemetry.addData("r value: ", "(%.2f)", r);
+            telemetry.addData("sl value: ", "(%.2f)", sl);
+            telemetry.addData("sr value: ", "(%.2f)", sr);
+            telemetry.addData("ro value: ", "(%.2f)", ro);
+            telemetry.update();
         }
 
 
@@ -211,9 +231,5 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         //  rightPower = -gamepad1.right_stick_y;
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motor level", "Run Time: " + leftMotor.getCurrentPosition());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", frontLeftPower, frontRightPower);
-        telemetry.update();
     }
     }
