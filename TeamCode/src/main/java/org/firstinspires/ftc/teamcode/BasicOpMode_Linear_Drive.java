@@ -178,7 +178,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
 
             }
             
-            // we will have to redo the clicks for the motors since we changed the gear ratios
+            // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
             
             if (gamepad1.b) {
                 leftMotor.setPower(.6);
@@ -211,10 +211,10 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
             intakeMotor.setPower(intakePower);
-
-            // For the arm positions we can use the get position data to add and subtract to the current
-            // position to get to the target position so that we don't have to return to the bottom each time
-
+            
+            // FOR THE ARM POSITIONS WE CAN USE THE GET POSITION DATA TO ADD OR SUBTRACT TO THE CURRENT
+            // POSITION TO GET TO THE TARGET POSITION SO THAT WE DON'T HAVE TO RETURN TO THE BOTTOM EACH TIME
+            
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motor level l", "Left Arm Position: " + leftMotor.getCurrentPosition());
             telemetry.addData("motor level r", "Right Arm Position: " + rightMotor.getCurrentPosition());
