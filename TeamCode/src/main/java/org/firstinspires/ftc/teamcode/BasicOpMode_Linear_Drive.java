@@ -126,6 +126,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             double sl = -gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
 
+
             boolean auhj = gamepad1.y;
             boolean imu = gamepad1.right_bumper;
             boolean imd = gamepad1.left_bumper;
@@ -146,21 +147,21 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             */
 
 
-            if (r > .2 || r < -.2) {
+            if (r > .1 || r < -.1) {
                 frontLeftPower = r;
                 backLeftPower = r;
                 frontRightPower = r;
                 backRightPower = r;
             }
 
-            if (sl < -.2 || sr > .2) {
+            if (sl < -.1 || sr > .1) {
                 frontLeftPower -= sl + sr;
                 backLeftPower -= sl + sr;
                 frontRightPower += sl + sr;
                 backRightPower += sl + sr;
             }
 
-            if (ro < -.2 || ro > .2) {
+            if (ro < -.1 || ro > .1) {
                 frontLeftPower -= ro;
                 backLeftPower += ro;
                 frontRightPower += ro;
@@ -176,6 +177,9 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 rightMotor.setTargetPosition(setPosition);
 
             }
+            
+            // we will have to redo the clicks for the motors since we changed the gear ratios
+            
             if (gamepad1.b) {
                 leftMotor.setPower(.6);
                 rightMotor.setPower(.6);
@@ -208,6 +212,8 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
             intakeMotor.setPower(intakePower);
 
+            // For the arm positions we can use the get position data to add and subtract to the current
+            // position to get to the target position so that we don't have to return to the bottom each time
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motor level l", "Left Arm Position: " + leftMotor.getCurrentPosition());
