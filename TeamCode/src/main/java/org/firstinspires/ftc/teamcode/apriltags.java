@@ -21,8 +21,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -34,14 +37,22 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 
 import java.util.ArrayList;
 
-@TeleOp
-public class AprilTagDemo extends LinearOpMode
+@Autonomous
+public class apriltags extends LinearOpMode
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
 
+    private DcMotor leftFrontDrive = null;
+    private DcMotor rightFrontDrive = null;
+    private DcMotor leftBackDrive = null;
+    private DcMotor rightBackDrive = null;
+
+    private DcMotor leftMotor = null;
+    private DcMotor rightMotor = null;
+    private DcMotor intakeMotor = null;
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
@@ -50,6 +61,7 @@ public class AprilTagDemo extends LinearOpMode
     double fy = 578.272;
     double cx = 402.145;
     double cy = 221.506;
+
 
     // UNITS ARE METERS
     double tagsize = 0.166;
@@ -63,7 +75,53 @@ public class AprilTagDemo extends LinearOpMode
 
     @Override
     public void runOpMode()
+
     {
+
+        // drive motors
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+
+        //arm motors
+        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
+        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
+
+        //intake motor
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+
+        //motor directions
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        leftFrontDrive.setTargetPosition(0);
+        rightFrontDrive.setTargetPosition(0);
+        leftBackDrive.setTargetPosition(0);
+        rightBackDrive.setTargetPosition(0);
+
+        //arm modes
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setTargetPosition(0);
+        rightMotor.setTargetPosition(0);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //drive train modes
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -136,9 +194,49 @@ public class AprilTagDemo extends LinearOpMode
                         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+                        if(detection.id == 0) {
+                            leftFrontDrive.setPower(.6);
+                            rightFrontDrive.setPower(.6);
+                            leftBackDrive.setPower(.6);
+                            rightBackDrive.setPower(.6);
+
+                            leftFrontDrive.setTargetPosition(1450);
+                            rightFrontDrive.setTargetPosition(1450);
+                            leftBackDrive.setTargetPosition(1450);
+                            rightBackDrive.setTargetPosition(1450);
+                            
+                        }
+
+                        if(detection.id == 1) {
+                            leftFrontDrive.setPower(.6);
+                            rightFrontDrive.setPower(.6);
+                            leftBackDrive.setPower(.6);
+                            rightBackDrive.setPower(.6);
+
+                            leftFrontDrive.setTargetPosition(1450);
+                            rightFrontDrive.setTargetPosition(1450);
+                            leftBackDrive.setTargetPosition(1450);
+                            rightBackDrive.setTargetPosition(1450);
+                        }
+
+                        if(detection.id == 2) {
+                            leftFrontDrive.setPower(.6);
+                            rightFrontDrive.setPower(.6);
+                            leftBackDrive.setPower(.6);
+                            rightBackDrive.setPower(.6);
+
+                            leftFrontDrive.setTargetPosition(0);
+                            rightFrontDrive.setTargetPosition(0);
+                            leftBackDrive.setTargetPosition(0);
+                            rightBackDrive.setTargetPosition(0);
+                        }
                     }
                 }
-
+                telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
+                telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());
+                telemetry.addData("backLeftDrive", "backLeftDrive: " + leftBackDrive.getCurrentPosition());
+                telemetry.addData("backRightDrive", "backRightDrive: " + rightBackDrive.getCurrentPosition());
                 telemetry.update();
             }
 
