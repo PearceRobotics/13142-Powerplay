@@ -38,21 +38,14 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 import java.util.ArrayList;
 
 @Autonomous
-public class apriltags extends LinearOpMode
+public class apriltags extends motorsetup
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
 
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private DcMotor intakeMotor = null;
     // Lens intrinsics
     // UNITS ARE PIXELS
     // NOTE: this calibration is for the C920 webcam at 800x448.
@@ -77,50 +70,7 @@ public class apriltags extends LinearOpMode
     public void runOpMode()
 
     {
-
-        // drive motors
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-
-        //arm motors
-        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
-        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
-
-        //intake motor
-        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
-
-        //motor directions
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        leftFrontDrive.setTargetPosition(0);
-        rightFrontDrive.setTargetPosition(0);
-        leftBackDrive.setTargetPosition(0);
-        rightBackDrive.setTargetPosition(0);
-
-        //arm modes
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setTargetPosition(0);
-        rightMotor.setTargetPosition(0);
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //drive train modes
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        super.runOpMode();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);

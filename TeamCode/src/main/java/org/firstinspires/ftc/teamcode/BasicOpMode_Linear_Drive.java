@@ -51,19 +51,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name = "Basic: Linear OpMode", group = "Robot code")
-public class BasicOpMode_Linear_Drive extends LinearOpMode {
+public class BasicOpMode_Linear_Drive extends motorsetup {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
-
-    //arm motors
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private DcMotor intakeMotor = null;
 
 
     @Override
@@ -71,42 +62,14 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        super.runOpMode();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
-
-        //arm motors
-        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
-        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
-
-        //intake motor
-        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
-
-        //arm motors
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor.setTargetPosition(0);
-        rightMotor.setTargetPosition(0);
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //intake motor
-        intakeMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Waitforthegametostart(driver presses PLAY)
         waitForStart();
@@ -115,12 +78,12 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         // run until the end of the match(driver presses STOP)
 
         while (opModeIsActive()) {
-//
+
             double backRightPower = 0;
             double frontRightPower = 0;
             double backLeftPower = 0;
             double frontLeftPower = 0;
-            double intakePower = 0;
+            //double intakePower = 0;
             double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
@@ -169,36 +132,48 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
                 backRightPower -= ro;
             }
 
+            leftMotor.setTargetPosition(0);
+            rightMotor.setTargetPosition(0);
+
             if (gamepad1.y) {
-                leftMotor.setPower(.6);
-                rightMotor.setPower(.6);
+                leftMotor.setPower(.3);
+                rightMotor.setPower(.3);
                 //change the setPosition
-                int setPosition = 375;
+                int setPosition = 200;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
             
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
-            
+
             if (gamepad1.b) {
-        //        leftMotor.setPower(.6);
-                rightMotor.setPower(.6);
+                leftMotor.setPower(.3);
+                rightMotor.setPower(.3);
                 // change the setPosition
-                int setPosition = 220;
-        //        leftMotor.setTargetPosition(setPosition);
+                int setPosition = 200;
+                leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
 
             if(gamepad1.a){
-         //       leftMotor.setPower(.4);
-                rightMotor.setPower(.4);
-                int setPosition = 0;
-        //        leftMotor.setTargetPosition(setPosition);
+                leftMotor.setPower(.1);
+                rightMotor.setPower(.1);
+                int setPosition = 100;
+                leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
-            }
 
+            }
+            if(gamepad1.right_bumper){
+                leftMotor.setPower(.1);
+                rightMotor.setPower(.1);
+                int setPosition = 100;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+
+            }
+            /*
             if (imu) {
                 intakePower = 1.0;
             }
@@ -206,13 +181,15 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             if(imd){
                 intakePower = -1.0;
             }
+
+             */
             // Send calculated power to wheels
             leftFrontDrive.setPower(frontLeftPower);
             leftBackDrive.setPower(backLeftPower);
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
-            intakeMotor.setPower(intakePower);
-            
+            //intakeMotor.setPower(intakePower);
+
             // FOR THE ARM POSITIONS WE CAN USE THE GET POSITION DATA TO ADD OR SUBTRACT TO THE CURRENT
             // POSITION TO GET TO THE TARGET POSITION SO THAT WE DON'T HAVE TO RETURN TO THE BOTTOM EACH TIME
             
