@@ -89,6 +89,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
+
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -181,20 +182,20 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
             
             if (gamepad1.b) {
-                leftMotor.setPower(.6);
+        //        leftMotor.setPower(.6);
                 rightMotor.setPower(.6);
                 // change the setPosition
                 int setPosition = 220;
-                leftMotor.setTargetPosition(setPosition);
+        //        leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
 
             if(gamepad1.a){
-                leftMotor.setPower(.4);
+         //       leftMotor.setPower(.4);
                 rightMotor.setPower(.4);
                 int setPosition = 0;
-                leftMotor.setTargetPosition(setPosition);
+        //        leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
             }
 
@@ -223,6 +224,10 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode {
             telemetry.addData("sl value: ", "(%.2f)", sl);
             telemetry.addData("sr value: ", "(%.2f)", sr);
             telemetry.addData("ro value: ", "(%.2f)", ro);
+            telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
+            telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());
+            telemetry.addData("backLeftDrive", "backLeftDrive: " + leftBackDrive.getCurrentPosition());
+            telemetry.addData("backRightDrive", "backRightDrive: " + rightBackDrive.getCurrentPosition());
             telemetry.update();
         }
 
