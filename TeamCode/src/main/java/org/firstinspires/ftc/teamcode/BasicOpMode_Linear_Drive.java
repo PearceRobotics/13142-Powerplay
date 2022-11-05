@@ -132,8 +132,6 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 backRightPower -= ro;
             }
 
-            leftMotor.setTargetPosition(0);
-            rightMotor.setTargetPosition(0);
 
             if (gamepad1.y) {
                 leftMotor.setPower(.3);
