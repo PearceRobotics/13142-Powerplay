@@ -146,8 +146,8 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
 
             if (gamepad1.b) {
-                leftMotor.setPower(.5);
-                rightMotor.setPower(.5);
+                leftMotor.setPower(1.0);
+                rightMotor.setPower(1.0);
                 // change the setPosition
                 int setPosition = 300;
                 leftMotor.setTargetPosition(setPosition);
@@ -156,12 +156,11 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             }
 
             if(gamepad1.a){
-                leftMotor.setPower(.5);
-                rightMotor.setPower(.5);
+                leftMotor.setPower(1.0);
+                rightMotor.setPower(1.0);
                 int setPosition = 100;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
-
             }
 
             if (imu) {
@@ -172,6 +171,24 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 intakePower = -1.0;
             }
 
+            //maybe use setposition to get to the different junctions
+            //and use setpower to pick up cones
+
+            if(gamepad1.dpad_up){
+                leftMotor.setPower(.5);
+                rightMotor.setPower(.5);
+                int setPosition = leftMotor.getCurrentPosition()+20;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+            }
+
+            if(gamepad1.dpad_down){
+                leftMotor.setPower(.5);
+                rightMotor.setPower(.5);
+                int setPosition = -leftMotor.getCurrentPosition()-20;
+                leftMotor.setTargetPosition(setPosition);
+                rightMotor.setTargetPosition(setPosition);
+            }
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(frontLeftPower);
@@ -179,6 +196,7 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
             intakeMotor.setPower(intakePower);
+
 
             // FOR THE ARM POSITIONS WE CAN USE THE GET POSITION DATA TO ADD OR SUBTRACT TO THE CURRENT
             // POSITION TO GET TO THE TARGET POSITION SO THAT WE DON'T HAVE TO RETURN TO THE BOTTOM EACH TIME
