@@ -16,7 +16,7 @@ public class motorsetup extends LinearOpMode
 
     protected DcMotor leftMotor = null;
     protected DcMotor rightMotor = null;
-    //protected DcMotor intakeMotor = null;
+    protected DcMotor intakeMotor = null;
 
     @Override
     public void runOpMode()
@@ -33,8 +33,8 @@ public class motorsetup extends LinearOpMode
         leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
         rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
 
-        //intake motor
-        //intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
 
         //motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);

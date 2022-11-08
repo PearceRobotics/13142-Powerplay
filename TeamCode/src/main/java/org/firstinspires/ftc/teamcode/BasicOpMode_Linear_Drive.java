@@ -83,7 +83,7 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             double frontRightPower = 0;
             double backLeftPower = 0;
             double frontLeftPower = 0;
-            //double intakePower = 0;
+            double intakePower = 0;
             double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
@@ -134,10 +134,10 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
 
 
             if (gamepad1.y) {
-                leftMotor.setPower(.3);
-                rightMotor.setPower(.3);
+                leftMotor.setPower(1.0);
+                rightMotor.setPower(1.0);
                 //change the setPosition
-                int setPosition = 200;
+                int setPosition = 1100;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
@@ -146,32 +146,24 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
 
             if (gamepad1.b) {
-                leftMotor.setPower(.3);
-                rightMotor.setPower(.3);
+                leftMotor.setPower(.5);
+                rightMotor.setPower(.5);
                 // change the setPosition
-                int setPosition = 200;
+                int setPosition = 300;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
 
             if(gamepad1.a){
-                leftMotor.setPower(.1);
-                rightMotor.setPower(.1);
+                leftMotor.setPower(.5);
+                rightMotor.setPower(.5);
                 int setPosition = 100;
                 leftMotor.setTargetPosition(setPosition);
                 rightMotor.setTargetPosition(setPosition);
 
             }
-            if(gamepad1.right_bumper){
-                leftMotor.setPower(.1);
-                rightMotor.setPower(.1);
-                int setPosition = 100;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
 
-            }
-            /*
             if (imu) {
                 intakePower = 1.0;
             }
@@ -180,13 +172,13 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 intakePower = -1.0;
             }
 
-             */
+
             // Send calculated power to wheels
             leftFrontDrive.setPower(frontLeftPower);
             leftBackDrive.setPower(backLeftPower);
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
-            //intakeMotor.setPower(intakePower);
+            intakeMotor.setPower(intakePower);
 
             // FOR THE ARM POSITIONS WE CAN USE THE GET POSITION DATA TO ADD OR SUBTRACT TO THE CURRENT
             // POSITION TO GET TO THE TARGET POSITION SO THAT WE DON'T HAVE TO RETURN TO THE BOTTOM EACH TIME
