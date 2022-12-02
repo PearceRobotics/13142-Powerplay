@@ -66,6 +66,8 @@ public class apriltags extends motorsetup
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
+
+
     @Override
     public void runOpMode()
 
@@ -146,40 +148,18 @@ public class apriltags extends motorsetup
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
                         if(detection.id == 0) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
+                            Auton.forward(1, .5);
 
-                            leftFrontDrive.setTargetPosition(1450);
-                            rightFrontDrive.setTargetPosition(1450);
-                            leftBackDrive.setTargetPosition(1450);
-                            rightBackDrive.setTargetPosition(1450);
-                            
                         }
 
                         if(detection.id == 1) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
-
-                            leftFrontDrive.setTargetPosition(1450);
-                            rightFrontDrive.setTargetPosition(1450);
-                            leftBackDrive.setTargetPosition(1450);
-                            rightBackDrive.setTargetPosition(1450);
+                            Auton.forward(1, .5);
+                            Auton.left(1, .5);
                         }
 
                         if(detection.id == 2) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
-
-                            leftFrontDrive.setTargetPosition(0);
-                            rightFrontDrive.setTargetPosition(0);
-                            leftBackDrive.setTargetPosition(0);
-                            rightBackDrive.setTargetPosition(0);
+                            Auton.forward(1, .5);
+                            Auton.right(1, .5);
                         }
                     }
                 }
