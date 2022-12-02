@@ -77,6 +77,8 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
 
         // run until the end of the match(driver presses STOP)
 
+        int armPosition = 0;
+
         while (opModeIsActive()) {
 
             double backRightPower = 0;
@@ -90,25 +92,12 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             double sl = -gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
 
-
-            boolean auhj = gamepad1.y;
             boolean imu = gamepad1.right_bumper;
             boolean imd = gamepad1.left_bumper;
-            boolean aumj = gamepad1.a;
 
-//
-            //  Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that 's not used.  The default below is POV.
-            // Denominator is the largest motor power (absolute value)or 1
-            // This ensures all the powers maintain the same ratio, but only when
-            // at least one is out of the[] range -1, 1]
-            /*
-            double denominator = Math.max(Math.abs(y)  + Math.abs(sl), 1);
-            double frontLeftPower = (y  + sl + sr) / denominator;
-            double backLeftPower = (y + sl + sr) / denominator;
-            double frontRightPower = (y - sl -sr) / denominator;
-            double backRightPower = (y - sl - sr) / denominator;
-            */
+            //higher lower
+            boolean higher;
+            double distance = (armPosition - (leftMotor.getCurrentPosition() + rightMotor.getCurrentPosition())/2);
 
 
             if (r > .1 || r < -.1) {
@@ -132,63 +121,101 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 backRightPower -= ro;
             }
 
-
-            if (gamepad1.y) {
-                leftMotor.setPower(1.0);
-                rightMotor.setPower(1.0);
-                //change the setPosition
-                int setPosition = 1100;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
-
+            if(distance > 0){
+                higher = true;
+                }
+            else{
+                higher = false;
             }
-            
+
+            int[] position = {1100, 500, 200};
+            double power = 0.5;
+            if (gamepad1.y && higher) {
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+                armPosition = position[0];
+
+                telemetry.addData("test", "is this working");
+            }
+            else if (gamepad1.y &&!higher){
+                power = .25;
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+            }
+
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
 
-            if (gamepad1.b) {
-                leftMotor.setPower(1.0);
-                rightMotor.setPower(1.0);
-                // change the setPosition
-                int setPosition = 300;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
+            if (gamepad1.b && higher) {
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
 
+                armPosition = position[1];
+            }
+            else if (gamepad1.b && !higher){
+                power = .25;
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
             }
 
-            if(gamepad1.a){
-                leftMotor.setPower(1.0);
-                rightMotor.setPower(1.0);
-                int setPosition = 100;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
+            if(gamepad1.a && higher){
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+
+                armPosition = position[2];
             }
+            else if (gamepad1.a && !higher){
+                power = .25;
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+            }
+
+            leftMotor.setTargetPosition(armPosition);
+            rightMotor.setTargetPosition(armPosition);
+
 
             if (imu) {
-                intakePower = 1.0;
+                intakeMotor.setPower(.2);
+                intakeMotor.setTargetPosition(5);
+            }
+            else if (!imu){
+                intakeMotor.setTargetPosition(0);
             }
 
-            if(imd){
-                intakePower = -1.0;
+
+            if (magnet.isPressed()){
+                leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
             //maybe use setposition to get to the different junctions
             //and use setpower to pick up cones
-
+            /*
             if(gamepad1.dpad_up){
-                leftMotor.setPower(.5);
-                rightMotor.setPower(.5);
-                int setPosition = leftMotor.getCurrentPosition()+20;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+                int setLeftPosition = leftMotor.getCurrentPosition()+20;
+                int setRightPosition = rightMotor.getCurrentPosition()+20;
+                leftMotor.setTargetPosition(setLeftPosition);
+                rightMotor.setTargetPosition(setRightPosition);
             }
 
             if(gamepad1.dpad_down){
-                leftMotor.setPower(.5);
-                rightMotor.setPower(.5);
-                int setPosition = -leftMotor.getCurrentPosition()-20;
-                leftMotor.setTargetPosition(setPosition);
-                rightMotor.setTargetPosition(setPosition);
+                leftMotor.setPower(power);
+                rightMotor.setPower(power);
+                int setLeftPosition = leftMotor.getCurrentPosition()-20;
+                int setRightPosition = rightMotor.getCurrentPosition()-20;
+                leftMotor.setTargetPosition(setLeftPosition);
+                rightMotor.setTargetPosition(setRightPosition);
             }
+
+            */
+
+            //I might have to create a reset button for the arm motors as the tilt may also be a
+            //Programming issue stemming from the encoders
+
+            //That does not mean that it can't be fixed mechanically
+
+            //resetting the encoders may remove any of the errors that skipping cause
 
             // Send calculated power to wheels
             leftFrontDrive.setPower(frontLeftPower);
@@ -213,6 +240,7 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());
             telemetry.addData("backLeftDrive", "backLeftDrive: " + leftBackDrive.getCurrentPosition());
             telemetry.addData("backRightDrive", "backRightDrive: " + rightBackDrive.getCurrentPosition());
+            telemetry.addData("intake", "intake: " + intakeMotor.getCurrentPosition());
             telemetry.update();
         }
 
