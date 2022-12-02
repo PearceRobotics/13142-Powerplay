@@ -7,19 +7,55 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import  com.qualcomm.robotcore.hardware.TouchSensor;
 public class Auton extends motorsetup
     {
-    double clicksPerInch = 8.1;
+    static double clicksPerInch = 8.1;
 
-    int leftFrontPos = leftFrontDrive.getCurrentPosition();
-    int rightFrontPos = rightFrontDrive.getCurrentPosition();
-    int leftBackPos = leftBackDrive.getCurrentPosition();
-    int rightBackPos = rightBackDrive.getCurrentPosition();
+    static int leftFrontPos = leftFrontDrive.getCurrentPosition();
+    static int rightFrontPos = rightFrontDrive.getCurrentPosition();
+    static int leftBackPos = leftBackDrive.getCurrentPosition();
+    static int rightBackPos = rightBackDrive.getCurrentPosition();
 
-        public void forward(double howFar, double howFast)
+        public static void forward(double howFar, double howFast)
         {
             leftFrontPos += howFar * clicksPerInch;
             rightFrontPos += howFar * clicksPerInch;
             leftBackPos += howFar * clicksPerInch;
             rightBackPos += howFar * clicksPerInch;
+
+            leftFrontDrive.setPower(howFast);
+            rightFrontDrive.setPower(howFar);
+            leftBackDrive.setPower(howFar);
+            rightBackDrive.setPower(howFar);
+
+            leftFrontDrive.setTargetPosition(leftFrontPos);
+            rightFrontDrive.setTargetPosition(rightFrontPos);
+            leftBackDrive.setTargetPosition(leftBackPos);
+            rightBackDrive.setTargetPosition(rightBackPos);
+        }
+
+        public static void left(double howFar, double howFast)
+        {
+            leftFrontPos -= howFar * clicksPerInch;
+            rightFrontPos += howFar * clicksPerInch;
+            leftBackPos -= howFar * clicksPerInch;
+            rightBackPos += howFar * clicksPerInch;
+
+            leftFrontDrive.setPower(howFast);
+            rightFrontDrive.setPower(howFar);
+            leftBackDrive.setPower(howFar);
+            rightBackDrive.setPower(howFar);
+
+            leftFrontDrive.setTargetPosition(leftFrontPos);
+            rightFrontDrive.setTargetPosition(rightFrontPos);
+            leftBackDrive.setTargetPosition(leftBackPos);
+            rightBackDrive.setTargetPosition(rightBackPos);
+        }
+
+        public static void right(double howFar, double howFast)
+        {
+            leftFrontPos += howFar * clicksPerInch;
+            rightFrontPos -= howFar * clicksPerInch;
+            leftBackPos += howFar * clicksPerInch;
+            rightBackPos -= howFar * clicksPerInch;
 
             leftFrontDrive.setPower(howFast);
             rightFrontDrive.setPower(howFar);

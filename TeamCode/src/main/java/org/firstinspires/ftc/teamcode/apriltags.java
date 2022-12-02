@@ -26,7 +26,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import java.util.Date;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -67,6 +66,8 @@ public class apriltags extends motorsetup
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
+
+
     @Override
     public void runOpMode()
 
@@ -96,8 +97,6 @@ public class apriltags extends motorsetup
         waitForStart();
 
         telemetry.setMsTransmissionInterval(50);
-        long time1 = 0;
-        boolean firstQrCodeSeen = false;
 
         while (opModeIsActive())
         {
@@ -148,21 +147,20 @@ public class apriltags extends motorsetup
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
-
                         if(detection.id == 0) {
-
-
+                            Auton.forward(1, .5);
 
                         }
 
                         if(detection.id == 1) {
-
-                            }
-
-                        if(detection.id == 2) {
-
+                            Auton.forward(1, .5);
+                            Auton.left(1, .5);
                         }
 
+                        if(detection.id == 2) {
+                            Auton.forward(1, .5);
+                            Auton.right(1, .5);
+                        }
                     }
                 }
                 telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
