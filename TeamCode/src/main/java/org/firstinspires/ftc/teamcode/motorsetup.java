@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import  com.qualcomm.robotcore.hardware.TouchSensor;
 
 
 public class motorsetup extends LinearOpMode
@@ -17,6 +18,8 @@ public class motorsetup extends LinearOpMode
     protected DcMotor leftMotor = null;
     protected DcMotor rightMotor = null;
     protected DcMotor intakeMotor = null;
+
+    public TouchSensor magnet = null;
 
     @Override
     public void runOpMode()
@@ -36,6 +39,8 @@ public class motorsetup extends LinearOpMode
 
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
 
+        magnet = hardwareMap.get(TouchSensor.class, "magnet");
+
         //motor directions
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -48,8 +53,8 @@ public class motorsetup extends LinearOpMode
         rightBackDrive.setTargetPosition(0);
 
         //arm modes
-      //  leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-       // rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -60,6 +65,9 @@ public class motorsetup extends LinearOpMode
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakeMotor.setTargetPosition(0);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         /*
         //drive train modes
         leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

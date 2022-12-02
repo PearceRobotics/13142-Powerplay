@@ -26,6 +26,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import java.util.Date;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -95,6 +96,8 @@ public class apriltags extends motorsetup
         waitForStart();
 
         telemetry.setMsTransmissionInterval(50);
+        long time1 = 0;
+        boolean firstQrCodeSeen = false;
 
         while (opModeIsActive())
         {
@@ -145,42 +148,21 @@ public class apriltags extends motorsetup
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
 
-                        if(detection.id == 0) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
 
-                            leftFrontDrive.setTargetPosition(1450);
-                            rightFrontDrive.setTargetPosition(1450);
-                            leftBackDrive.setTargetPosition(1450);
-                            rightBackDrive.setTargetPosition(1450);
-                            
+                        if(detection.id == 0) {
+
+
+
                         }
 
                         if(detection.id == 1) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
 
-                            leftFrontDrive.setTargetPosition(1450);
-                            rightFrontDrive.setTargetPosition(1450);
-                            leftBackDrive.setTargetPosition(1450);
-                            rightBackDrive.setTargetPosition(1450);
-                        }
+                            }
 
                         if(detection.id == 2) {
-                            leftFrontDrive.setPower(.6);
-                            rightFrontDrive.setPower(.6);
-                            leftBackDrive.setPower(.6);
-                            rightBackDrive.setPower(.6);
 
-                            leftFrontDrive.setTargetPosition(0);
-                            rightFrontDrive.setTargetPosition(0);
-                            leftBackDrive.setTargetPosition(0);
-                            rightBackDrive.setTargetPosition(0);
                         }
+
                     }
                 }
                 telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
