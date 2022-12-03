@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class motorsetup extends LinearOpMode
 {
 
-<<<<<<< HEAD
+
 
     protected static DcMotor leftFrontDrive = null;
     protected static DcMotor rightFrontDrive = null;
@@ -20,21 +20,9 @@ public class motorsetup extends LinearOpMode
     protected static DcMotor rightMotor = null;
     protected static DcMotor intakeMotor = null;
 
-=======
->>>>>>> 3dc879b1162289d0d3b13f43cd4249b81df2772e
-    protected DcMotor leftFrontDrive = null;
-    protected DcMotor rightFrontDrive = null;
-    protected DcMotor leftBackDrive = null;
-    protected DcMotor rightBackDrive = null;
 
-    protected DcMotor leftMotor = null;
-    protected DcMotor rightMotor = null;
-    protected DcMotor intakeMotor = null;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 3dc879b1162289d0d3b13f43cd4249b81df2772e
     @Override
     public void runOpMode()
 
