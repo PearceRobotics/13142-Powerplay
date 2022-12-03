@@ -38,8 +38,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 import java.util.ArrayList;
 
 @Autonomous
-public class apriltags extends motorsetup
-{
+public class apriltags extends motorsetup {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
@@ -67,11 +66,8 @@ public class apriltags extends motorsetup
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
 
-
     @Override
-    public void runOpMode()
-
-    {
+    public void runOpMode() {
         super.runOpMode();
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -79,17 +75,14 @@ public class apriltags extends motorsetup
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
 
         camera.setPipeline(aprilTagDetectionPipeline);
-        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
-            public void onOpened()
-            {
-                camera.startStreaming(800,448, OpenCvCameraRotation.UPRIGHT);
+            public void onOpened() {
+                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
-            public void onError(int errorCode)
-            {
+            public void onError(int errorCode) {
 
             }
         });
@@ -98,8 +91,7 @@ public class apriltags extends motorsetup
 
         telemetry.setMsTransmissionInterval(50);
 
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             // Calling getDetectionsUpdate() will only return an object if there was a new frame
             // processed since the last time we called it. Otherwise, it will return null. This
             // enables us to only run logic when there has been a new frame, as opposed to the
@@ -107,67 +99,64 @@ public class apriltags extends motorsetup
             ArrayList<AprilTagDetection> detections = aprilTagDetectionPipeline.getDetectionsUpdate();
 
             // If there's been a new frame...
-            if(detections != null)
-            {
+            if (detections != null) {
                 telemetry.addData("FPS", camera.getFps());
                 telemetry.addData("Overhead ms", camera.getOverheadTimeMs());
                 telemetry.addData("Pipeline ms", camera.getPipelineTimeMs());
 
                 // If we don't see any tags
-                if(detections.size() == 0)
-                {
+                if (detections.size() == 0) {
                     numFramesWithoutDetection++;
 
                     // If we haven't seen a tag for a few frames, lower the decimation
                     // so we can hopefully pick one up if we're e.g. far back
-                    if(numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION)
-                    {
+                    if (numFramesWithoutDetection >= THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION) {
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_LOW);
                     }
                 }
                 // We do see tags!
-                else
-                {
+                else {
                     numFramesWithoutDetection = 0;
 
                     // If the target is within 1 meter, turn on high decimation to
                     // increase the frame rate
-                    if(detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS)
-                    {
+                    if (detections.get(0).pose.z < THRESHOLD_HIGH_DECIMATION_RANGE_METERS) {
                         aprilTagDetectionPipeline.setDecimation(DECIMATION_HIGH);
                     }
 
-                    for(AprilTagDetection detection : detections)
-                    {
+                    for (AprilTagDetection detection : detections) {
                         telemetry.addLine(String.format("\nDetected tag ID=%d", detection.id));
-                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y*FEET_PER_METER));
-                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z*FEET_PER_METER));
+                        telemetry.addLine(String.format("Translation X: %.2f feet", detection.pose.x * FEET_PER_METER));
+                        telemetry.addLine(String.format("Translation Y: %.2f feet", detection.pose.y * FEET_PER_METER));
+                        telemetry.addLine(String.format("Translation Z: %.2f feet", detection.pose.z * FEET_PER_METER));
                         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
-                        telemetry.update();
 
-                        if(detection.id == 0) {
-                            Auton.liftArm(2, .75);
-                            Auton.forward(1, .5);
-                            detection = null;
-                        }
 
-                        if(detection.id == 1) {
-                            Auton.liftArm(2, .75);
-                            Auton.forward(1, .8);
-                            Auton.left(1, .5);
-                        }
-
-                        if(detection.id == 2) {
-                            Auton.liftArm(2, .75);
-                            Auton.forward(1, .8);
-                            Auton.right(1, .5);
-                        }
                     }
 
                 }
+                telemetry.update();
+
+                if (detections.get(0).id == 0) {
+                   // Auton.liftArm(2, .75);
+                    Auton.forward(1, .5);
+                }
+
+                if (detections.get(1).id == 1) {
+                   // Auton.liftArm(2, .75);
+                    Auton.forward(1, .8);
+                    Auton.left(1, .5);
+                }
+
+                if (detections.get(2).id == 2) {
+                   // Auton.liftArm(2, .75);
+                    Auton.forward(1, .8);
+                    Auton.right(1, .5);
+
+                }
+
                 telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
                 telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());
                 telemetry.addData("backLeftDrive", "backLeftDrive: " + leftBackDrive.getCurrentPosition());
@@ -177,5 +166,8 @@ public class apriltags extends motorsetup
 
             sleep(20);
         }
+
     }
 }
+
+

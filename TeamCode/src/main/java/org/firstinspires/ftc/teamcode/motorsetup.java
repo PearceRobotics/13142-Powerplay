@@ -7,9 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import  com.qualcomm.robotcore.hardware.TouchSensor;
 
 
-public class motorsetup extends LinearOpMode
-{
-
+public class motorsetup extends LinearOpMode {
 
 
     protected static DcMotor leftFrontDrive = null;
@@ -22,14 +20,10 @@ public class motorsetup extends LinearOpMode
     protected static DcMotor intakeMotor = null;
 
 
-
-
     public TouchSensor magnet = null;
 
     @Override
-    public void runOpMode()
-
-    {
+    public void runOpMode() {
 
         // drive motors
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_drive");
@@ -41,7 +35,6 @@ public class motorsetup extends LinearOpMode
         leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
         rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
 
-
         intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
 
         magnet = hardwareMap.get(TouchSensor.class, "magnet");
@@ -52,14 +45,10 @@ public class motorsetup extends LinearOpMode
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftFrontDrive.setTargetPosition(0);
-        rightFrontDrive.setTargetPosition(0);
-        leftBackDrive.setTargetPosition(0);
-        rightBackDrive.setTargetPosition(0);
-
         //arm modes
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -69,9 +58,8 @@ public class motorsetup extends LinearOpMode
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intakeMotor.setTargetPosition(0);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         /*
         //drive train modes
@@ -85,7 +73,37 @@ public class motorsetup extends LinearOpMode
         leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         */
-            }
+    }
 
-        }
+    public static void Auto() {
+        //drive stuff
+        leftFrontDrive.setTargetPosition(0);
+        rightFrontDrive.setTargetPosition(0);
+        leftBackDrive.setTargetPosition(0);
+        rightBackDrive.setTargetPosition(0);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //arm stuff
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor.setTargetPosition(0);
+        rightMotor.setTargetPosition(0);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotor.setTargetPosition(0);
+        intakeMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+}
+
+
 

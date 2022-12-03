@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -51,18 +52,79 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @TeleOp(name = "Basic: Linear OpMode", group = "Robot code")
-public class BasicOpMode_Linear_Drive extends motorsetup {
+public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*/ {
 
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
+
+    protected static DcMotor leftFrontDrive = null;
+    protected static DcMotor rightFrontDrive = null;
+    protected static DcMotor leftBackDrive = null;
+    protected static DcMotor rightBackDrive = null;
+
+    protected static DcMotor leftMotor = null;
+    protected static DcMotor rightMotor = null;
+    protected static DcMotor intakeMotor = null;
+
+
+
+    public TouchSensor magnet = null;
 
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        super.runOpMode();
+
+        // drive motors
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_drive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "back_right_drive");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "back_left_drive");
+
+        //arm motors
+        leftMotor = hardwareMap.get(DcMotor.class, "left_arm_motor");
+        rightMotor = hardwareMap.get(DcMotor.class, "right_arm_motor");
+
+        intakeMotor = hardwareMap.get(DcMotor.class, "intake_motor");
+
+        magnet = hardwareMap.get(TouchSensor.class, "magnet");
+
+        //motor directions
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        //arm modes
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+        rightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotor.setTargetPosition(0);
+        rightMotor.setTargetPosition(0);
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotor.setPower(0);
+        /*
+        //drive train modes
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        */
+        //super.runOpMode();
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -94,9 +156,6 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             double sr = gamepad1.right_trigger;
             double sl = -gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
-
-            boolean imu = gamepad1.right_bumper;
-            boolean imd = gamepad1.left_bumper;
 
             //higher lower
             boolean higher;
@@ -131,7 +190,27 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 higher = false;
             }
 
-            int[] position = {1100, 500, 150};
+            int[] position = {1100, 500, 120};
+//
+//            if(gamepad1.y){
+//                leftMotor.setPower(power);
+//                rightMotor.setPower(power);
+//                leftMotor.setTargetPosition(position[0]);
+//
+//
+//            }
+//
+//            if(gamepad1.b){
+//                leftMotor.setPower(power);
+//                rightMotor.setPower(power);
+//                leftMotor.setTargetPosition(position[1]);
+//            }
+//
+//            if(gamepad1.a){
+//                leftMotor.setPower(power);
+//                rightMotor.setPower(power);
+//                leftMotor.setTargetPosition(position[2]);
+//            }
 
             if (gamepad1.y && higher) {
                 leftMotor.setPower(power);
@@ -175,16 +254,16 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 armPosition = position[2];
             }
 
-            leftMotor.setTargetPosition(armPosition);
-            rightMotor.setTargetPosition(armPosition);
-
-            if (imu) {
+            if (gamepad1.right_bumper) {
                 intakeMotor.setPower(.75);
             }
 
-            if (imd){
+            if (gamepad1.left_bumper){
                 intakeMotor.setPower(-.75);
             }
+
+            leftMotor.setTargetPosition(armPosition);
+            rightMotor.setTargetPosition(armPosition);
 
 
 /*
