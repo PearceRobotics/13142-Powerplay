@@ -146,22 +146,27 @@ public class apriltags extends motorsetup
                         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+                        telemetry.update();
 
                         if(detection.id == 0) {
+                            Auton.liftArm(2, .75);
                             Auton.forward(1, .5);
-
+                            detection = null;
                         }
 
                         if(detection.id == 1) {
-                            Auton.forward(1, .5);
+                            Auton.liftArm(2, .75);
+                            Auton.forward(1, .8);
                             Auton.left(1, .5);
                         }
 
                         if(detection.id == 2) {
-                            Auton.forward(1, .5);
+                            Auton.liftArm(2, .75);
+                            Auton.forward(1, .8);
                             Auton.right(1, .5);
                         }
                     }
+
                 }
                 telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
                 telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());

@@ -78,7 +78,7 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
         // run until the end of the match(driver presses STOP)
 
         int armPosition = 0;
-
+        double power = 0.5;
         while (opModeIsActive()) {
 
             double backRightPower = 0;
@@ -86,6 +86,9 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             double backLeftPower = 0;
             double frontLeftPower = 0;
             double intakePower = 0;
+            double fla = 1.1;
+            double bla = 1.1;
+            double bra = .90;
             double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
@@ -101,24 +104,24 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
 
 
             if (r > .1 || r < -.1) {
-                frontLeftPower = r;
-                backLeftPower = r;
-                frontRightPower = r;
-                backRightPower = r;
+                frontLeftPower = r * fla;
+                backLeftPower = r * bla;
+                frontRightPower = r *fla;
+                backRightPower = r * bra;
             }
 
             if (sl < -.1 || sr > .1) {
-                frontLeftPower -= sl + sr;
-                backLeftPower -= sl + sr;
-                frontRightPower += sl + sr;
-                backRightPower += sl + sr;
+                frontLeftPower -= (sl + sr) * fla;
+                backLeftPower -= (sl + sr) * bla;
+                frontRightPower += (sl + sr) * fla;
+                backRightPower += (sl + sr) * bra;
             }
 
             if (ro < -.1 || ro > .1) {
-                frontLeftPower -= ro;
-                backLeftPower += ro;
-                frontRightPower += ro;
-                backRightPower -= ro;
+                frontLeftPower -= ro * fla;
+                backLeftPower += ro * bla;
+                frontRightPower += ro * fla;
+                backRightPower -= ro * bra;
             }
 
             if(distance > 0){
@@ -128,8 +131,8 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 higher = false;
             }
 
-            int[] position = {1100, 500, 200};
-            double power = 0.5;
+            int[] position = {1100, 500, 150};
+
             if (gamepad1.y && higher) {
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
@@ -137,10 +140,11 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
 
                 telemetry.addData("test", "is this working");
             }
-            else if (gamepad1.y &&!higher){
-                power = .25;
+            else if (gamepad1.y && !higher){
+                power = .3;
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
+                armPosition = position[0];
             }
 
             // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
@@ -148,13 +152,14 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
             if (gamepad1.b && higher) {
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
-
                 armPosition = position[1];
             }
             else if (gamepad1.b && !higher){
-                power = .25;
+                power = .3;
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
+                armPosition = position[1];
+
             }
 
             if(gamepad1.a && higher){
@@ -164,29 +169,30 @@ public class BasicOpMode_Linear_Drive extends motorsetup {
                 armPosition = position[2];
             }
             else if (gamepad1.a && !higher){
-                power = .25;
+                power = .3;
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
+                armPosition = position[2];
             }
 
             leftMotor.setTargetPosition(armPosition);
             rightMotor.setTargetPosition(armPosition);
 
-
             if (imu) {
-                intakeMotor.setPower(.2);
-                intakeMotor.setTargetPosition(5);
+                intakeMotor.setPower(.75);
             }
-            else if (!imu){
-                intakeMotor.setTargetPosition(0);
+
+            if (imd){
+                intakeMotor.setPower(-.75);
             }
 
 
+/*
             if (magnet.isPressed()){
                 leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
-
+*/
             //maybe use setposition to get to the different junctions
             //and use setpower to pick up cones
             /*

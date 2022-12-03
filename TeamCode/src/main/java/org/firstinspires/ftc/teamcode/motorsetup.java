@@ -10,14 +10,19 @@ import  com.qualcomm.robotcore.hardware.TouchSensor;
 public class motorsetup extends LinearOpMode
 {
 
-    protected DcMotor leftFrontDrive = null;
-    protected DcMotor rightFrontDrive = null;
-    protected DcMotor leftBackDrive = null;
-    protected DcMotor rightBackDrive = null;
 
-    protected DcMotor leftMotor = null;
-    protected DcMotor rightMotor = null;
-    protected DcMotor intakeMotor = null;
+
+    protected static DcMotor leftFrontDrive = null;
+    protected static DcMotor rightFrontDrive = null;
+    protected static DcMotor leftBackDrive = null;
+    protected static DcMotor rightBackDrive = null;
+
+    protected static DcMotor leftMotor = null;
+    protected static DcMotor rightMotor = null;
+    protected static DcMotor intakeMotor = null;
+
+
+
 
     public TouchSensor magnet = null;
 
