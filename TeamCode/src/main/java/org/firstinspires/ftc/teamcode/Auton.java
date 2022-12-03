@@ -7,7 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import  com.qualcomm.robotcore.hardware.TouchSensor;
 public class Auton extends motorsetup
     {
-    static double clicksPerInch = 8.1;
+    static double clicksPerInch = 56.989;
+    static double clicksPerArmInch = 205.729;
 
     static int leftFrontPos = leftFrontDrive.getCurrentPosition();
     static int rightFrontPos = rightFrontDrive.getCurrentPosition();
@@ -68,4 +69,14 @@ public class Auton extends motorsetup
             rightBackDrive.setTargetPosition(rightBackPos);
         }
 
+        public static void liftArm(double howFar, double howFast){
+
+            leftMotor.setPower(howFast);
+            rightMotor.setPower(howFast);
+
+            int leftMotorPos = (int)(howFar * clicksPerArmInch);
+            int rightMotorPos = (int)(howFar * clicksPerArmInch);
+            leftMotor.setTargetPosition(leftMotorPos);
+            rightMotor.setTargetPosition(rightMotorPos);
+        }
     }
