@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.apriltag.AprilTagDetection;
@@ -37,12 +38,13 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 import java.util.ArrayList;
 
 @Autonomous
-public class Apriltag extends LinearOpMode
+public class apriltags extends motorsetup
 {
     OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
     static final double FEET_PER_METER = 3.28084;
+
 
     // Lens intrinsics
     // UNITS ARE PIXELS
@@ -53,15 +55,6 @@ public class Apriltag extends LinearOpMode
     double cx = 402.145;
     double cy = 221.506;
 
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
-
-    //arm motors
-    private DcMotor leftMotor = null;
-    private DcMotor rightMotor = null;
-    private DcMotor intakeMotor = null;
 
     // UNITS ARE METERS
     double tagsize = 0.166;
@@ -73,9 +66,14 @@ public class Apriltag extends LinearOpMode
     final float THRESHOLD_HIGH_DECIMATION_RANGE_METERS = 1.0f;
     final int THRESHOLD_NUM_FRAMES_NO_DETECTION_BEFORE_LOW_DECIMATION = 4;
 
+
+
     @Override
     public void runOpMode()
+
     {
+        super.runOpMode();
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
@@ -148,22 +146,31 @@ public class Apriltag extends LinearOpMode
                         telemetry.addLine(String.format("Rotation Yaw: %.2f degrees", Math.toDegrees(detection.pose.yaw)));
                         telemetry.addLine(String.format("Rotation Pitch: %.2f degrees", Math.toDegrees(detection.pose.pitch)));
                         telemetry.addLine(String.format("Rotation Roll: %.2f degrees", Math.toDegrees(detection.pose.roll)));
+
+                        if(detection.id == 0) {
+                            Auton.forward(1, .5);
+
+                        }
+
+                        if(detection.id == 1) {
+                            Auton.forward(1, .5);
+                            Auton.left(1, .5);
+                        }
+
+                        if(detection.id == 2) {
+                            Auton.forward(1, .5);
+                            Auton.right(1, .5);
+                        }
                     }
                 }
-
+                telemetry.addData("frontLeftDrive", "frontLeftDrive: " + leftFrontDrive.getCurrentPosition());
+                telemetry.addData("frontRightDrive", "frontRightDrive: " + rightFrontDrive.getCurrentPosition());
+                telemetry.addData("backLeftDrive", "backLeftDrive: " + leftBackDrive.getCurrentPosition());
+                telemetry.addData("backRightDrive", "backRightDrive: " + rightBackDrive.getCurrentPosition());
                 telemetry.update();
             }
 
             sleep(20);
-
-            /*if(){
-                leftFrontDrive.setTargetPosition();
-                leftBackDrive.setTargetPosition();
-                rightFrontDrive.setTargetPosition();
-                rightBackDrive.setTargetPosition();
-
-            }
-            */
         }
     }
 }
