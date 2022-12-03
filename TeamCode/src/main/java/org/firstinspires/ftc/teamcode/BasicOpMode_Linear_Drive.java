@@ -255,11 +255,11 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
             }
 
             if (gamepad1.right_bumper) {
-                intakeMotor.setPower(.75);
+                intakeMotor.setPower(.9);
             }
 
             if (gamepad1.left_bumper){
-                intakeMotor.setPower(-.75);
+                intakeMotor.setPower(-9);
             }
 
             leftMotor.setTargetPosition(armPosition);
