@@ -77,6 +77,11 @@ public class motorsetup extends LinearOpMode {
 
     public static void Auto() {
         //drive stuff
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+
         leftFrontDrive.setTargetPosition(0);
         rightFrontDrive.setTargetPosition(0);
         leftBackDrive.setTargetPosition(0);

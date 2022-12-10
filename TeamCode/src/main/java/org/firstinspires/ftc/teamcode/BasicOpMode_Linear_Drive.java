@@ -141,6 +141,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
 
         int armPosition = 0;
         double power = 0.5;
+
         while (opModeIsActive()) {
 
             double backRightPower = 0;
@@ -154,7 +155,7 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
             double r = -gamepad1.left_stick_y; // Remember, this is reversed!
             //double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
             double sr = gamepad1.right_trigger;
-            double sl = -gamepad1.left_trigger;
+            double sl = gamepad1.left_trigger;
             double ro = -gamepad1.right_stick_x;
 
             //higher lower
@@ -169,11 +170,18 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
                 backRightPower = r * bra;
             }
 
-            if (sl < -.1 || sr > .1) {
-                frontLeftPower -= (sl + sr) * fla;
-                backLeftPower -= (sl + sr) * bla;
-                frontRightPower += (sl + sr) * fla;
-                backRightPower += (sl + sr) * bra;
+            if (sl > .1) {
+                frontLeftPower += (sl + sr) - .06;
+                backLeftPower += (sl + sr) ;
+                frontRightPower -= (sl + sr) - .06;
+                backRightPower -= (sl + sr) -.09;
+            }
+
+            if (sr > .1) {
+                frontLeftPower -= (sl + sr) - .06;
+                backLeftPower -= (sl + sr) ;
+                frontRightPower += (sl + sr) - .06;
+                backRightPower += (sl + sr) - .09;
             }
 
             if (ro < -.1 || ro > .1) {
@@ -183,12 +191,22 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
                 backRightPower -= ro * bra;
             }
 
+
             if(distance > 0){
                 higher = true;
                 }
             else{
                 higher = false;
             }
+
+
+            if (higher){
+                power = .35;
+            }
+            else if (!higher){
+                power = .35;
+            }
+
 
             int[] position = {1100, 500, 120};
 //
@@ -212,43 +230,19 @@ public class BasicOpMode_Linear_Drive extends LinearOpMode /*extends motorsetup*
 //                leftMotor.setTargetPosition(position[2]);
 //            }
 
-            if (gamepad1.y && higher) {
-                leftMotor.setPower(power);
-                rightMotor.setPower(power);
-                armPosition = position[0];
-
-                telemetry.addData("test", "is this working");
-            }
-            else if (gamepad1.y && !higher){
-                power = .3;
+            if (gamepad1.y) {
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
                 armPosition = position[0];
             }
 
-            // WE WILL HAVE TO REDO THE CLICKS FOR THE SETPOSITIONS SINCE WE CHANGED THE GEAR RATIOS
-
-            if (gamepad1.b && higher) {
+            if (gamepad1.b) {
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
                 armPosition = position[1];
             }
-            else if (gamepad1.b && !higher){
-                power = .3;
-                leftMotor.setPower(power);
-                rightMotor.setPower(power);
-                armPosition = position[1];
 
-            }
-
-            if(gamepad1.a && higher){
-                leftMotor.setPower(power);
-                rightMotor.setPower(power);
-
-                armPosition = position[2];
-            }
-            else if (gamepad1.a && !higher){
-                power = .3;
+            if(gamepad1.a) {
                 leftMotor.setPower(power);
                 rightMotor.setPower(power);
                 armPosition = position[2];
